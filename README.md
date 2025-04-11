@@ -12,3 +12,6 @@ Started the project at 10AM, spent a few hours getting comfortable and finding a
 I was going to use Gemini API, but I ran into too many bugs to continue.
 I decided to pay for an OpenAI key to use ChatGPT4.
 Recently, I got my python code to run ChatGPT4 through the API and included dotenv and venv to protect my API key.
+
+![Image](https://github.com/user-attachments/assets/d4b4e8f8-a565-443f-8f85-c97494cc6f72)
+
