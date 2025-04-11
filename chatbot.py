@@ -11,7 +11,6 @@ Collaborators: None
 Sources: OpenAI, ChatGPT
 Version: 1.0
 '''
-
 import openai
 import os
 from PyPDF2 import PdfReader
@@ -50,8 +49,9 @@ except Exception as e:
 
 target_job = input("Enter the target job title: ").strip()
 
-# --- Generate 3-5 interview questions ---
-question_prompt = f"""
+# --- Question generation loop (with optional regeneration) ---
+def get_interview_questions(resume, target_job):
+    question_prompt = f"""
 You are a professional interviewer. Based on the resume below, generate 3 to 5 **numbered** and realistic **technical** interview questions for the position of **{target_job}**.
 
 Only output the questions in this format:
@@ -62,30 +62,46 @@ Only output the questions in this format:
 Resume:
 {resume}
 """
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": question_prompt}
+        ]
+    )
+    raw = response.choices[0].message.content.strip().split("\n")
+    questions = [line.strip() for line in raw if line.strip() and any(char.isdigit() for char in line[:3])]
+    return questions
 
-question_response = client.chat.completions.create(
-    model="gpt-4o",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": question_prompt}
-    ]
-)
+questions = get_interview_questions(resume, target_job)
+print("\n🧠 Here are your generated interview questions:\n")
+for q in questions:
+    print(q)
 
-# --- Extract only numbered questions ---
-raw_output = question_response.choices[0].message.content.strip().split("\n")
-questions = [line.strip() for line in raw_output if line.strip() and any(char.isdigit() for char in line[:3])]
+while True:
+    regenerate = input("\n🔄 Would you like to regenerate the questions? (yes/no): ").lower().strip()
+    if regenerate == "yes":
+        questions = get_interview_questions(resume, target_job)
+        print("\n♻️ New Questions:\n")
+        for q in questions:
+            print(q)
+    elif regenerate == "no":
+        break
+    else:
+        print("Please enter 'yes' or 'no'.")
 
-# --- Q&A loop with feedback ---
-log_path = "interview_log.txt"
-
+# --- Markdown log setup ---
+log_path = "interview_log.md"
 with open(log_path, "a", encoding="utf-8") as log_file:
-    log_file.write(f"\n===== INTERVIEW SESSION =====\nTarget Job: {target_job}\n\n")
+    log_file.write(f"\n# Interview Simulation\n**Target Job:** {target_job}\n\n")
 
-    for q in questions:
-        print(f"\n📝 Interview Question:\n{q}")
-        answer = input("\nYour Answer:\n")
+    for idx, q in enumerate(questions, 1):
+        print(f"\n📝 Question {idx}: {q}")
 
-        feedback_prompt = f"""
+        while True:
+            answer = input("\nYour Answer:\n")
+
+            feedback_prompt = f"""
 Resume:
 {resume}
 
@@ -95,15 +111,24 @@ Answer: {answer}
 Give helpful, constructive feedback on this interview answer.
 """
 
-        feedback_response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[{"role": "user", "content": feedback_prompt}]
-        )
-        feedback = feedback_response.choices[0].message.content.strip()
+            feedback_response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[{"role": "user", "content": feedback_prompt}]
+            )
+            feedback = feedback_response.choices[0].message.content.strip()
 
-        print(f"\n💡 Feedback:\n{feedback}")
+            print(f"\n💡 Feedback:\n{feedback}")
 
-        # Save Q/A/Feedback to log
-        log_file.write(f"Q: {q}\nA: {answer}\nFeedback: {feedback}\n{'-'*50}\n")
+            retry = input("\n🔁 Would you like to retry this answer? (yes/no): ").lower().strip()
+            if retry == "no":
+                break
+            elif retry != "yes":
+                print("Please enter 'yes' or 'no'.")
+
+        # Save to markdown log
+        log_file.write(f"## Question {idx}\n")
+        log_file.write(f"**Q:** {q}\n\n")
+        log_file.write(f"**A:** {answer}\n\n")
+        log_file.write(f"**💡 Feedback:** {feedback}\n\n---\n")
 
 print(f"\n📁 Session saved to: {log_path}")
