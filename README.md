@@ -24,3 +24,5 @@ For the OpenAi model, I added a timer and implemented streaming feedback to the 
 Converted the code to work in Gemini AI after some debugging. Implemeneted areas of improvement to the user based on their resume and job interest (potential projects, certifications, etc). 
 I then started focusing on the frontend where I made an app.py file which implemented flask to better translate the API to my new html files (index and interview), I also addea a css file to add some style.
 
+![Image](https://github.com/user-attachments/assets/e9e5f434-83de-4888-ba15-1e8fe183b1ca)
+
