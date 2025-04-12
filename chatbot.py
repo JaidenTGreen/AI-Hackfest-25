@@ -2,17 +2,19 @@
 Author: Jaiden Green
 School: University of Kansas
 Created: Friday, April 11, 2025 11:30 AM
-Last Updated: Friday, April 11, 2025
+Last Updated: Friday, April 11, 2025 5:00 PM
 Program Description:
 Python file that interacts with OpenAI's API to conduct a mock interview based on a user's resume.
 Inputs and reads either txt or pdf files for the resume.
 Outputs a series of technical interview questions based on the resume and the target job title.
 Collaborators: None
 Sources: OpenAI, ChatGPT
-Version: 1.0
+Version: 1.0.3
 '''
 import openai
 import os
+import time
+import threading
 from PyPDF2 import PdfReader
 from dotenv import load_dotenv
 
@@ -49,7 +51,7 @@ except Exception as e:
 
 target_job = input("Enter the target job title: ").strip()
 
-# --- Question generation loop (with optional regeneration) ---
+# --- Generate questions with retry option ---
 def get_interview_questions(resume, target_job):
     question_prompt = f"""
 You are a professional interviewer. Based on the resume below, generate 3 to 5 **numbered** and realistic **technical** interview questions for the position of **{target_job}**.
@@ -97,11 +99,30 @@ with open(log_path, "a", encoding="utf-8") as log_file:
 
     for idx, q in enumerate(questions, 1):
         print(f"\n📝 Question {idx}: {q}")
+        
+        # Timer logic: 90 seconds to answer
+        print("\n⏱️ You have 90 seconds to answer. Start typing:")
+        answer = ""
+        start_time = time.time()
+        def timeout():
+            print("\n⏰ Time's up! Press enter to submit your answer.")
+        timer = threading.Timer(90, timeout)
+        timer.start()
+
+        try:
+            answer = input()
+        finally:
+            timer.cancel()
 
         while True:
-            answer = input("\nYour Answer:\n")
-
-            feedback_prompt = f"""
+            print("\n💡 Generating feedback (streaming)...")
+            print("Feedback:", end=" ", flush=True)
+            feedback = ""
+            try:
+                stream = client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=[
+                        {"role": "user", "content": f"""
 Resume:
 {resume}
 
@@ -109,20 +130,34 @@ Question: {q}
 Answer: {answer}
 
 Give helpful, constructive feedback on this interview answer.
-"""
+"""}
+                    ],
+                    stream=True
+                )
 
-            feedback_response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[{"role": "user", "content": feedback_prompt}]
-            )
-            feedback = feedback_response.choices[0].message.content.strip()
+                for chunk in stream:
+                    delta = chunk.choices[0].delta
+                    if delta and delta.content:
+                        print(delta.content, end="", flush=True)
+                        feedback += delta.content
+            except Exception as e:
+                print(f"\n❌ Error streaming feedback: {e}")
+                break
 
-            print(f"\n💡 Feedback:\n{feedback}")
-
-            retry = input("\n🔁 Would you like to retry this answer? (yes/no): ").lower().strip()
+            print("\n")
+            retry = input("🔁 Would you like to retry this answer? (yes/no): ").lower().strip()
             if retry == "no":
                 break
-            elif retry != "yes":
+            elif retry == "yes":
+                print("\n⏱️ You have 90 seconds to answer. Start typing:")
+                answer = ""
+                timer = threading.Timer(90, timeout)
+                timer.start()
+                try:
+                    answer = input()
+                finally:
+                    timer.cancel()
+            else:
                 print("Please enter 'yes' or 'no'.")
 
         # Save to markdown log
@@ -132,3 +167,6 @@ Give helpful, constructive feedback on this interview answer.
         log_file.write(f"**💡 Feedback:** {feedback}\n\n---\n")
 
 print(f"\n📁 Session saved to: {log_path}")
+print("✅ All done! Good luck with your interview preparation!")
+
+# --- End of File ---
