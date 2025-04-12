@@ -2,16 +2,15 @@
 Author: Jaiden Green
 School: University of Kansas
 Created: Friday, April 11, 2025 5:00 PM
-Last Updated: Friday, April 11, 2025
+Last Updated: Friday, April 11, 2025 6:45 PM
 Program Description:
 Python file that interacts with OpenAI's API to conduct a mock interview based on a user's resume.
 Inputs and reads either txt or pdf files for the resume.
 Outputs a series of technical interview questions based on the resume and the target job title.
 Collaborators: None
 Sources: OpenAI, ChatGPT
-Version: 2.0
+Version: 1.1.1
 '''
-
 import google.generativeai as genai
 import os
 import time
@@ -19,6 +18,7 @@ import threading
 from PyPDF2 import PdfReader
 from dotenv import load_dotenv
 
+# Load Gemini API key
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel("gemini-1.5-pro")
@@ -50,6 +50,33 @@ except Exception as e:
     exit()
 
 target_job = input("Enter the target job title: ").strip()
+
+# --- Optional: Analyze resume for skill gaps ---
+def analyze_resume(resume, target_job):
+    prompt = f"""
+You are a technical career coach. Given the resume below, and the target job of "{target_job}", identify:
+
+1. Any missing or weak technical skills
+2. Areas to improve based on current experience
+3. Suggested next steps to become a stronger candidate
+4. Optional: project or course recommendations
+
+Resume:
+{resume}
+"""
+    response = model.generate_content(prompt)
+    return response.text.strip()
+
+print("\n🧠 Running smart resume analysis...\n")
+gap_analysis = analyze_resume(resume, target_job)
+print(gap_analysis)
+
+# Log the result
+log_path = "interview_log_gemini.md"
+with open(log_path, "a", encoding="utf-8") as log_file:
+    log_file.write(f"\n# Interview Simulation\n**Target Job:** {target_job}\n\n")
+    log_file.write("## 🧠 Resume Gap Analysis\n")
+    log_file.write(gap_analysis + "\n\n---\n")
 
 # --- Generate Gemini questions ---
 def get_questions_gemini(resume, target_job):
@@ -85,22 +112,17 @@ while True:
     else:
         print("Please enter 'yes' or 'no'.")
 
-# --- Markdown log setup ---
-log_path = "interview_log_gemini.md"
+# --- Q&A loop ---
 with open(log_path, "a", encoding="utf-8") as log_file:
-    log_file.write(f"\n# Interview Simulation\n**Target Job:** {target_job}\n\n")
-
     for idx, q in enumerate(questions, 1):
         print(f"\n📝 Question {idx}: {q}")
         
         print("\n⏱️ You have 90 seconds to answer. Start typing:")
         answer = ""
-        start_time = time.time()
         def timeout():
             print("\n⏰ Time's up! Press enter to submit your answer.")
         timer = threading.Timer(90, timeout)
         timer.start()
-
         try:
             answer = input()
         finally:
@@ -145,4 +167,5 @@ Give helpful, constructive feedback on this interview answer.
         log_file.write(f"**A:** {answer}\n\n")
         log_file.write(f"**💡 Feedback:** {feedback}\n\n---\n")
 
-print(f"\n📁 Gemini session saved to: {log_path}")
+print(f"\n📁 Session saved to: {log_path}")
+# --- End of script ---
