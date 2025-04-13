@@ -1,0 +1,62 @@
+<!--
+Author: Jaiden Green
+School: University of Kansas
+Created: Friday, April 11, 2025 11:45 PM
+Last Updated: Friday, April 12, 2025 5:57 PM
+Program Description:
+  This is a Flask web application that allows users to upload their resume and target job title.
+  The application uses the Gemini API to analyze the resume and generate interview questions based on the job title.
+  The user can then view the generated questions and prepare for their interview.
+Collaborators: None
+Sources: ChatGPT, W3Schools, Flask Documentation
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interview Question {{ index + 1 }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script>
+    let time = {{ timer }};
+    const countdown = () => {
+      if (time > 0) {
+        time--;
+        document.getElementById("countdown").innerText = `⏱️ Time remaining: ${time}s`;
+        setTimeout(countdown, 1000);
+      }
+    };
+    window.onload = countdown;
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Question {{ index + 1 }}</h1>
+    <p>{{ question }}</p>
+
+    {% if feedback %}
+      <div class="feedback-box">
+        <h3>💡 Feedback:</h3>
+        <p>{{ feedback | safe }}</p>
+      </div>
+
+      <form method="POST" style="display:inline;">
+        <input type="hidden" name="redo" value="true">
+        <button type="submit">🔁 Retry This Question</button>
+      </form>
+
+      <form method="POST" style="display:inline;">
+        <input type="hidden" name="continue" value="true">
+        <button type="submit">➡️ Continue</button>
+      </form>
+      
+    {% else %}
+    <form method="POST">
+      <label id="countdown">⏱️ Time remaining: {{ timer }}s</label><br><br>
+      <textarea id="answer" name="answer" rows="6" required>{{ answer if answer else "" }}</textarea><br><br>
+      <button type="submit" name="submit" value="true">Submit Answer</button>
+    </form>
+    
+    {% endif %}
+  </div>
+</body>
+</html>
