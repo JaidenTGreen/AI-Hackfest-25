@@ -2,7 +2,7 @@
 Author: Jaiden Green
 School: University of Kansas
 Created: Friday, April 11, 2025 6:45 PM
-Last Updated: Friday, April 11, 2025 9:29 PM
+Last Updated: Friday, April 11, 2025 6:00 PM
 Program Description:
   This is a Flask web application that allows users to upload their resume and target job title.
   The application uses the Gemini API to analyze the resume and generate interview questions based on the job title.
@@ -15,12 +15,12 @@ Sources: ChatGPT, W3Schools, Flask Documentation
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Interview Questions</title>
+  <title>Interview Setup</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="container">
-    <h1>Interview Prep Results</h1>
+    <h1>AI Interview Setup</h1>
     <h2>Target Job: {{ job_title }}</h2>
 
     <section>
@@ -29,27 +29,18 @@ Sources: ChatGPT, W3Schools, Flask Documentation
     </section>
 
     <section>
-      <h3>📋 Interview Questions</h3>
-      <form method="POST" action="/submit_answers">
-        <ol>
-          {% for q in questions %}
-            <li style="margin-bottom: 20px;">
-              <p>{{ q }}</p>
-              <textarea name="answer_{{ loop.index }}" rows="4" placeholder="Type your answer here..." required></textarea>
-              <input type="hidden" name="question_{{ loop.index }}" value="{{ q }}">
-            </li>
-          {% endfor %}
-        </ol>
-
-        <input type="hidden" name="job_title" value="{{ job_title }}">
-        <input type="hidden" name="gap_analysis" value="{{ gap_analysis }}">
-
-        <button type="submit">🧠 Get Feedback</button>
-      </form>
+      <h3>📋 Generated Interview Questions</h3>
+      <ol>
+        {% for q in questions %}
+          <li>{{ q }}</li>
+        {% endfor %}
+      </ol>
     </section>
 
-    <br>
-    <a href="{{ url_for('index') }}">🔁 Start Over</a>
+    <form method="POST">
+      <button type="submit" name="regenerate">🔁 Regenerate Questions</button>
+      <button type="submit" name="start">✅ Start Interview</button>
+    </form>
   </div>
 </body>
 </html>
