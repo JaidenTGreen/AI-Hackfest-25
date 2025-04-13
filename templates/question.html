@@ -2,13 +2,13 @@
 Author: Jaiden Green
 School: University of Kansas
 Created: Friday, April 11, 2025 11:45 PM
-Last Updated: Friday, April 12, 2025 5:57 PM
+Last Updated: Sunday, April 13, 2025 3:35 AM
 Program Description:
   This is a Flask web application that allows users to upload their resume and target job title.
   The application uses the Gemini API to analyze the resume and generate interview questions based on the job title.
   The user can then view the generated questions and prepare for their interview.
 Collaborators: None
-Sources: ChatGPT, W3Schools, Flask Documentation
+Sources: ChatGPT, W3Schools
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -18,14 +18,24 @@ Sources: ChatGPT, W3Schools, Flask Documentation
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script>
     let time = {{ timer }};
-    const countdown = () => {
+    let countdownInterval = null;
+  
+    function countdown() {
       if (time > 0) {
         time--;
-        document.getElementById("countdown").innerText = `⏱️ Time remaining: ${time}s`;
-        setTimeout(countdown, 1000);
+        document.getElementById("countdown").innerText = `⏱️ Suggested time remaining: ${time}s`;
+      } else {
+        clearInterval(countdownInterval);
+  
+        // ✅ Auto-submit the form
+        const form = document.getElementById("answer-form");
+        if (form) form.submit();
       }
+    }
+  
+    window.onload = function () {
+      countdownInterval = setInterval(countdown, 1000);
     };
-    window.onload = countdown;
   </script>
 </head>
 <body>
@@ -34,9 +44,10 @@ Sources: ChatGPT, W3Schools, Flask Documentation
     <p>{{ question }}</p>
 
     {% if feedback %}
-      <div class="feedback-box">
-        <h3>💡 Feedback:</h3>
-        <p>{{ feedback | safe }}</p>
+      <div class="question-result" style="margin-top: 1em;">
+        <h3>{{ index + 1 }}. {{ question.split(' ', 1)[1] if '. ' in question else question }}</h3>
+        <p><strong>Your Answer:</strong> {{ answer }}</p>
+        <p><strong>Feedback:</strong> {{ feedback | safe }}</p>
       </div>
 
       <form method="POST" style="display:inline;">
@@ -50,11 +61,14 @@ Sources: ChatGPT, W3Schools, Flask Documentation
       </form>
       
     {% else %}
-    <form method="POST">
-      <label id="countdown">⏱️ Time remaining: {{ timer }}s</label><br><br>
-      <textarea id="answer" name="answer" rows="6" required>{{ answer if answer else "" }}</textarea><br><br>
-      <button type="submit" name="submit" value="true">Submit Answer</button>
-    </form>
+      <form method="POST" id="answer-form">
+        <label id="countdown">⏱️ Suggested time remaining: {{ timer }}s</label><br><br>
+        <textarea id="answer" name="answer" rows="6"
+          style="width: 100%; box-sizing: border-box;"
+          required>{{ answer if answer else "" }}</textarea>
+        <button id="submit" type="submit" name="submit" value="true">Submit Answer</button>
+      </form>
+    
     
     {% endif %}
   </div>
