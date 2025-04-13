@@ -2,7 +2,7 @@
 Author: Jaiden Green
 School: University of Kansas
 Created: Friday, April 11, 2025 6:45 PM
-Last Updated: Friday, April 12, 2025 11:33 PM
+Last Updated: Sunday, April 13, 2025 3:33 AM
 Program Description:
     This is a CSS file for a Flask web application that provides a user interface for analyzing text files.
     The styles are designed to create a clean and modern look, with a focus on usability and readability.
@@ -12,7 +12,7 @@ Sources: ChatGPT, W3Schools, Flask Documentation
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f6f8;
+    background: #1b4269;
     color: #333;
     margin: 0;
     padding: 0;
@@ -48,7 +48,7 @@ body {
   }
   
   button {
-    background-color: #4CAF50;
+    background-color: #7a0d0d;
     color: white;
     border: none;
     cursor: pointer;
@@ -56,13 +56,13 @@ body {
   }
   
   button:hover {
-    background-color: #45a049;
+    background-color: #af1919;
   }
   
   .analysis-box {
     background-color: #f9f9f9;
     padding: 15px;
-    border-left: 5px solid #4CAF50;
+    border-left: 5px solid #7a0d0d;
     border-radius: 6px;
     white-space: pre-wrap;
   }
@@ -75,7 +75,7 @@ body {
     display: inline-block;
     margin-top: 20px;
     text-decoration: none;
-    color: #4CAF50;
+    color: #7a0d0d;
     font-weight: bold;
   }
   
@@ -88,7 +88,7 @@ body {
   
   .feedback-box {
     background-color: #f1f9f4;
-    border-left: 5px solid #4CAF50;
+    border-left: 5px solid #7a0d0d;
     padding: 10px;
     border-radius: 6px;
     white-space: pre-wrap;
