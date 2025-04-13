@@ -1,0 +1,41 @@
+<!--
+Author: Jaiden Green
+School: University of Kansas
+Created: Friday, April 12, 2025 1:15 PM
+Last Updated: Friday, April 12, 2025 5:59 PM
+Program Description:
+  This is a Flask web application that allows users to upload their resume and target job title.
+  The application uses the Gemini API to analyze the resume and generate interview questions based on the job title.
+  The user can then view the generated questions and prepare for their interview.
+Collaborators: None
+Sources: ChatGPT, W3Schools, Flask Documentation
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interview Results</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🎓 Interview Session Results</h1>
+    <h2>Target Job: {{ job_title }}</h2>
+
+    <section>
+        {% for q, a, f in zip(questions, answers, feedbacks) %}
+          <div class="question-result">
+            <h3>{{ loop.index }}. {{ q }}</h3>
+            <p><strong>Your Answer:</strong> {{ a }}</p>
+            <p><strong>Feedback:</strong> {{ f | safe }}</p>
+          </div>
+        {% endfor %}
+      </section>
+      
+
+    <br>
+    <a href="{{ url_for('index') }}">🔁 Start New Interview</a>
+  </div>
+</body>
+</html>
