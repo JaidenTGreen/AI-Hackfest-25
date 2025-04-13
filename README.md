@@ -35,5 +35,10 @@ Most of today was spent debugging, as I was formatting the html files to work wi
 ### 6:20am:
 I have been up since my last devpost yesterday (yes it was 12 hours ago). I am using render to host my website, and because of that I implemented gunicorn to initialize the website instead of just calling "python app.py". I also created a render.yaml file to help the website run faster. There were some edits I made to app.py to help it run on a website as opposed to locally through my IP. After I got my rough demo prepared, I spent some time refining the html, css, and embedded javascript files for a better, more cohesive, user experience. Once I was satisfied (around 4:00am) I created a demo video on youtube and finalized my MLH DevPost. Overall, I am immensely  of myself, and this website; thank you for reading my DevLogs, and Happy Hacking!
 
-![Video](https://youtu.be/6tNVmvmledI)
+<iframe width="560" height="315"
+  src="https://youtu.be/6tNVmvmledI"
+  title="YouTube video player" frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen></iframe>
+
 
