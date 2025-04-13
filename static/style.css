@@ -2,7 +2,7 @@
 Author: Jaiden Green
 School: University of Kansas
 Created: Friday, April 11, 2025 6:45 PM
-Last Updated: Friday, April 11, 2025 9:31 PM
+Last Updated: Friday, April 12, 2025 11:33 PM
 Program Description:
     This is a CSS file for a Flask web application that provides a user interface for analyzing text files.
     The styles are designed to create a clean and modern look, with a focus on usability and readability.
@@ -82,4 +82,16 @@ body {
   a:hover {
     text-decoration: underline;
   }
+  .result-block {
+    margin-bottom: 30px;
+  }
+  
+  .feedback-box {
+    background-color: #f1f9f4;
+    border-left: 5px solid #4CAF50;
+    padding: 10px;
+    border-radius: 6px;
+    white-space: pre-wrap;
+  }
+  
   
