@@ -2,7 +2,7 @@
 Author: Jaiden Green
 School: University of Kansas
 Created: Friday, April 11, 2025 6:45 PM
-Last Updated: Friday, April 12, 2025 5:50 PM
+Last Updated: Friday, April 12, 2025 11:00 PM
 Program Description:
 Python file that interacts with OpenAI's API to conduct a mock interview based on a user's resume.
 Inputs and reads either txt or pdf files for the resume.
