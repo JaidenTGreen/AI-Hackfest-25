@@ -2,13 +2,13 @@
 Author: Jaiden Green
 School: University of Kansas
 Created: Friday, April 11, 2025 6:45 PM
-Last Updated: Friday, April 12, 2025 6:00 PM
+Last Updated: Sunday, April 13, 2025 3:58 AM
 Program Description:
   This is a Flask web application that allows users to upload their resume and target job title.
   The application uses the Gemini API to analyze the resume and generate interview questions based on the job title.
   The user can then view the generated questions and prepare for their interview.
 Collaborators: None
-Sources: ChatGPT, W3Schools, Flask Documentation
+Sources: ChatGPT, W3Schools
 -->
 
 <!DOCTYPE html>
@@ -25,16 +25,20 @@ Sources: ChatGPT, W3Schools, Flask Documentation
 
     <section>
       <h3>🧠 Resume Gap Analysis</h3>
-      <div class="analysis-box">{{ gap_analysis | safe }}</div>
+      <div class="question-result" style="margin-top: 1em;">
+        <h3>Resume Gap Analysis</h3>
+        <p>{{ gap_analysis | safe }}</p>
+      </div>
     </section>
 
     <section>
       <h3>📋 Generated Interview Questions</h3>
       <ol>
         {% for q in questions %}
-          <li>{{ q }}</li>
+          {% set cleaned = q.split(' ', 1)[1] if q.split(' ', 1)[0].replace('.', '').isdigit() else q %}
+        <li style="margin-bottom: 0.5em;">{{ loop.index }}. {{ cleaned }}</li>
         {% endfor %}
-      </ol>
+      </ol>      
     </section>
 
     <form method="POST">
