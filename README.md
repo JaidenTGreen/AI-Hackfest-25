@@ -26,3 +26,10 @@ I then started focusing on the frontend where I made an app.py file which implem
 
 ![Image](https://github.com/user-attachments/assets/e9e5f434-83de-4888-ba15-1e8fe183b1ca)
 
+## Saturday April 12th
+### 6:00pm:
+
+Most of today was spent debugging, as I was formatting the html files to work with my app.py which would output responses based on the Google Gemini API. I ended up adding two more hdmi files (question and results) to have the website interaction flow better. I also added flask to my app.py to be able to relay information to these html files, it also helped a bug where the gap analysis in my interview.html wasn't reading in my resume as it wasnt able to fully render it. Finally I converted the markdown outputs to a readable html using the markdown python libraru. 
+
+
+
