@@ -224,8 +224,5 @@ def results():
                            feedbacks=session.get("feedbacks"),
                            zip=zip)
 
-# === Launch ===
-if __name__ == "__main__":
-    os.makedirs("uploads", exist_ok=True)
-    print("🚀 Server starting on http://127.0.0.1:5000")
-    app.run(debug=True)
+os.makedirs("uploads", exist_ok=True)
+
