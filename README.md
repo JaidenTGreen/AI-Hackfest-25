@@ -31,5 +31,9 @@ I then started focusing on the frontend where I made an app.py file which implem
 
 Most of today was spent debugging, as I was formatting the html files to work with my app.py which would output responses based on the Google Gemini API. I ended up adding two more hdmi files (question and results) to have the website interaction flow better. I also added flask to my app.py to be able to relay information to these html files, it also helped a bug where the gap analysis in my interview.html wasn't reading in my resume as it wasnt able to fully render it. Finally I converted the markdown outputs to a readable html using the markdown python libraru. 
 
+## Sunday April 13th
+### 6:20am:
+I have been up since my last devpost yesterday (yes it was 12 hours ago). I am using render to host my website, and because of that I implemented gunicorn to initialize the website instead of just calling "python app.py". I also created a render.yaml file to help the website run faster. There were some edits I made to app.py to help it run on a website as opposed to locally through my IP. After I got my rough demo prepared, I spent some time refining the html, css, and embedded javascript files for a better, more cohesive, user experience. Once I was satisfied (around 4:00am) I created a demo video on youtube and finalized my MLH DevPost. Overall, I am immensely  of myself, and this website; thank you for reading my DevLogs, and Happy Hacking!
 
+![Video](https://youtu.be/6tNVmvmledI)
 
